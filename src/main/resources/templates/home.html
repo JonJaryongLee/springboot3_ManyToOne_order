@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout/layout}"
+>
+<body>
+<th:block layout:fragment="content">
+    <h2>홈 화면</h2>
+    <a href="/parts">부품 관리</a>
+    <a href="/orders">주문 관리</a>
+</th:block>
+</body>
+</html>
