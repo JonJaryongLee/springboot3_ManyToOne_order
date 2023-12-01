@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout/layout}"
+>
+<body>
+<th:block layout:fragment="content">
+    <ul>
+        <li th:each="order : ${orders}">
+            <span th:text="${order.orderDate}">주문 날짜</span>
+            <span th:text="${order.part.name}">부품 이름</span>
+            <form
+                    th:action="@{/orders/delete/} + ${order.id}"
+                    method="post"
+                    style="display:inline"
+            >
+                <input type="hidden" th:value="${order.id}">
+                <button>X</button>
+            </form>
+        </li>
+    </ul>
+    <p>
+        <span>합계: </span>
+        <span th:text="${totalOrderPrice}">123456</span>
+    </p>
+    <a href="/orders/new">주문 생성</a>
+</th:block>
+</body>
+</html>

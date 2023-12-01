@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout/layout}"
+>
+<body>
+<th:block layout:fragment="content">
+    <form
+            th:action="@{/parts/new}"
+            method="post"
+            th:object="${partForm}"
+    >
+        <label th:for="name">부품 이름</label>
+        <input type="text" th:field="*{name}">
+        <p
+                th:if="${#fields.hasErrors('name')}"
+                th:errors="*{name}"
+        >
+            Incorrect data
+        </p>
+        <br>
+        <label th:for="price">부품 가격</label>
+        <input type="number" th:field="*{price}">
+        <p
+                th:if="${#fields.hasErrors('price')}"
+                th:errors="*{price}"
+        >
+            Incorrect data
+        </p>
+        <br>
+        <input type="submit" value="추가">
+    </form>
+</th:block>
+</body>
+</html>

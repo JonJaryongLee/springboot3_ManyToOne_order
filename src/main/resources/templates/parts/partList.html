@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout/layout}"
+>
+<body>
+<th:block layout:fragment="content">
+    <ul>
+        <li th:each="part : ${parts}">
+            <span th:text="${part.name}">개별 부품</span>
+            <span th:text="${part.price}">개별 가격</span>
+            <form
+                    th:action="@{/parts/delete/} + ${part.id}"
+                    method="post"
+                    style="display:inline"
+            >
+                <input type="hidden" th:value="${part.id}">
+                <button>X</button>
+            </form>
+        </li>
+    </ul>
+    <a href="/parts/new">부품 생성</a>
+</th:block>
+</body>
+</html>

@@ -1,145 +1,75 @@
 package com.example.warehouse.repository;
 
+import com.example.warehouse.entity.Order;
 import com.example.warehouse.entity.Part;
+import com.example.warehouse.repository.OrderRepository;
+import com.example.warehouse.repository.PartRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 
 @SpringBootTest
 @Transactional
 class OrderRepositoryTest {
-
-    @Autowired PartRepository partRepository;
     @Autowired OrderRepository orderRepository;
 
-    @Test
-    void findByIdTest() {
-        // given
-        Part part = new Part();
-        part.setName("헤드램프");
-        part.setPrice(10000L);
-        Part savedPart = partRepository.save(part);
-
-        // when
-        Part foundPart = partRepository.findById(savedPart.getId()).get();
-
-        // then
-        Assertions.assertThat(foundPart.getId()).isEqualTo(savedPart.getId());
-        Assertions.assertThat(foundPart.getName()).isEqualTo(savedPart.getName());
-        Assertions.assertThat(foundPart.getPrice()).isEqualTo(savedPart.getPrice());
-    }
+    @Autowired PartRepository partRepository;
 
     @Test
-    void findByIdNotFoundTest() {
-        // given
-
-        // when
-        Optional<Part> foundPart = partRepository.findById(99L);
-
-        // then
-        Assertions.assertThat(foundPart).isEqualTo(Optional.empty());
-    }
-
-    @Test
-    void findAllTest() {
+    void testFindAll() {
         // given
         Part part1 = new Part();
-        part1.setName("헤드램프");
-        part1.setPrice(20000L);
-        partRepository.save(part1);
+        part1.setName("test1");
+        part1.setPrice(1000L);
+        Part savedPart1 = partRepository.save(part1);
+
+        Order order1 = new Order();
+        order1.setPart(savedPart1);
+        order1.setOrderDate(LocalDateTime.now());
+        orderRepository.save(order1);
 
         Part part2 = new Part();
-        part2.setName("시그널램프");
-        part2.setPrice(40000L);
-        partRepository.save(part2);
+        part2.setName("test2");
+        part2.setPrice(2000L);
+        Part savedPart2 = partRepository.save(part2);
+
+        Order order2 = new Order();
+        order2.setPart(savedPart2);
+        order2.setOrderDate(LocalDateTime.now());
+        orderRepository.save(order2);
 
         // when
-        List<Part> parts = partRepository.findAll();
+        List<Order> orders = orderRepository.findAll();
 
         // then
-        Assertions.assertThat(parts.size()).isEqualTo(2);
+        Assertions.assertThat(orders.size()).isEqualTo(2);
     }
 
     @Test
-    void findAllEmptyTest() {
-        // given
-
-        // when
-        List<Part> parts = partRepository.findAll();
-
-        // then
-        Assertions.assertThat(parts.size()).isEqualTo(0);
-    }
-
-    @Test
-    void findByNameTest() {
+    void testDelete() {
         // given
         Part part = new Part();
-        part.setName("헤드램프");
-        part.setPrice(20000L);
-        partRepository.save(part);
-
-        // when
-        Part foundPart = partRepository.findByName("헤드램프").get();
-
-        // then
-        Assertions.assertThat(part.getId()).isEqualTo(foundPart.getId());
-        Assertions.assertThat(part.getName()).isEqualTo(foundPart.getName());
-        Assertions.assertThat(part.getPrice()).isEqualTo(foundPart.getPrice());
-    }
-
-    @Test
-    void findByNameNotFoundTest() {
-        // given
-
-        // when
-        Optional<Part> foundPart = partRepository.findByName("헤드램프");
-
-        // then
-        Assertions.assertThat(foundPart).isEqualTo(Optional.empty());
-    }
-
-    @Test
-    void saveForUpdateTest() {
-        // given
-        Part part = new Part();
-        part.setName("헤드램프");
-        part.setPrice(10000L);
+        part.setName("test");
+        part.setPrice(1000L);
         Part savedPart = partRepository.save(part);
 
-        // when
-        savedPart.setName("헤드램프");
-        Part updatedPart = partRepository.save(savedPart);
-        Part foundPart = partRepository.findById(updatedPart.getId()).get();
-
-        // then
-        Assertions.assertThat(foundPart.getId()).isEqualTo(updatedPart.getId());
-        Assertions.assertThat(foundPart.getName()).isEqualTo(updatedPart.getName());
-        Assertions.assertThat(foundPart.getPrice()).isEqualTo(updatedPart.getPrice());
-    }
-
-    @Test
-    void deleteByIdTest() {
-        // given
-        Part part = new Part();
-        part.setName("헤드램프");
-        part.setPrice(20000L);
-        Part savedPart = partRepository.save(part);
-        Long savedPartId = savedPart.getId();
+        Order order = new Order();
+        order.setPart(savedPart);
+        order.setOrderDate(LocalDateTime.now());
+        Order savedOrder = orderRepository.save(order);
 
         // when
-        partRepository.deleteById(savedPartId);
-        Optional<Part> foundPart = partRepository.findById(savedPartId);
+        orderRepository.deleteById(savedOrder.getId());
+        Order deletedOrder = orderRepository.findById(savedOrder.getId()).orElse(null);
 
         // then
-        Assertions.assertThat(foundPart).isEqualTo(Optional.empty());
+        Assertions.assertThat(deletedOrder).isNull();
     }
 }
